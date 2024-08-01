@@ -14,7 +14,7 @@
                 var data = inp.files[0];
               }
 
-              var src = "https://mii.rc24.xyz/images/loading.gif";
+              var src = "loading.gif";
               $(".mii").attr("src", src);
               $(".mii").attr("width", $(".parameter[name=width]").siblings(".small").text().split("px")[0]);
 
@@ -122,7 +122,7 @@
               font-family: sans-serif;
               line-height: 150%;
               text-align: center;
-              background-image: url("https://mii.rc24.xyz/images/background-plaza.png");
+              background-image: url("background-plaza.png");
               background-repeat: repeat;
             }
             .small {
@@ -152,7 +152,7 @@
 <body>
 <h2>Mii Renderer</h2>
 <p>This is a tool to render a Mii into image form. It works for any type of Mii - ones created on the Wii, a QR Code, or even a Mii on RiiConnect24's Check Mii Out Channel! The output can be customized however you like. This works great to use as a profile picture!</p>
-<p>Check out <a href="https://mii.rc24.xyz/">mii.rc24.xyz</a> for more Mii content!</p>
+<p>Check out <a href="https://miicontest.wiilink.ca/">miicontest.wiilink.ca</a> for more Mii content!</p>
 <br>
 <label>Mii Type: <select name="version">
 <option value="wii" selected>Wii</option>
@@ -169,7 +169,7 @@
 <span class="small">(Mii binary file or QR Code)</span>
 <br>
 <br>
-<label>Nintendo Account ID / <a href="https://mii.rc24.xyz/">Check Mii Out Channel</a> Entry Number <input type="text" name="id" id="mii-id" onchange="Entry()" value="5403-6703-1484"><input type="submit" value="Submit" onclick="Entry()"></label><br>
+<label>Nintendo Account ID / <a href="https://miicontest.wiilink.ca/">Check Mii Out Channel</a> Entry Number <input type="text" name="id" id="mii-id" onchange="Entry()" value="5403-6703-1484"><input type="submit" value="Submit" onclick="Entry()"></label><br>
 <span class="small">For instructions on how to get Mii IDs (only if grabbing from a Nintendo Account), please refer to <a href="https://pastebin.com/Xy7RqKMz" target="_blank">this Pastebin</a>.</span><br>
 <br>
 <label>Image</label>

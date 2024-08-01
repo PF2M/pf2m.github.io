@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>tag64 encoder/decoder</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1 class="pad-bottom">tag64 encoder/decoder</h1>
+        <p>this tool lets you hide/show text within other text using <a href="https://en.wikipedia.org/wiki/Tags_(Unicode_block)">unicode tags</a> and <a href="https://en.wikipedia.org/wiki/Base64">base64</a></p>
+        <p>to use it, simply wrap the text you want to hide with <code>Tag64[your text here]</code></p>
+        <p class="pad-bottom">i doubt anyone will have much use for this format, but i made it anyways</p>
+        <h2>encode</h2>
+        <textarea id="encode-input" rows="5" placeholder="text you want to encode"></textarea><br>
+        <input type="submit" id="encode-submit" value="encode"><br>
+        <p id="encode-error" class="error" style="display:none">your input is empty</p>
+        <textarea id="encode-output" class="pad-bottom" rows="3" placeholder="tag64-encoded output will be shown here"></textarea>
+        <h2>decode</h2>
+        <textarea id="decode-input" rows="5" placeholder="text containing tag64-encoded content"></textarea><br>
+        <label><input type="checkbox" id="decode-include-tags"> show <code>Tag64[]</code></label><br>
+        <input type="submit" id="decode-submit" value="decode"><br>
+        <p id="decode-error" class="error" style="display:none">your input is empty</p>
+        <textarea id="decode-output" rows="3" placeholder="tag64-decoded output will be shown here"></textarea>
+        <style>
+            h1, h2, p {
+                margin: 0;
+            }
+            .pad-bottom {
+                margin-bottom: 8px;
+            }
+            textarea {
+                width: 80%;
+                padding: 8px;
+                border-radius: 4px;
+            }
+            textarea::placeholder {
+                color: #999;
+            }
+            input[type=submit] {
+                width: 84px;
+                height: 36px;
+                border-radius: 4px;
+                margin-bottom: 6px;
+            }
+            .error {
+                color: #f00;
+            }
+        </style>
+        <script>
+            document.getElementById('encode-submit').addEventListener('click', function() {
+                var text = document.getElementById('encode-input').value;
+                if(text.length === 0) {
+                    document.getElementById('encode-error').removeAttribute('style');
+                } else {
+                    document.getElementById('encode-error').setAttribute('style', 'display: none');
+                    var output = '';
+                    var split = text.split('Tag64[').reduce(function(secondSplit, element) {
+                        element.split(']').forEach(function(newElement) {
+                            secondSplit.push(newElement);
+                        });
+                        return secondSplit;
+                    }, []);
+                    split.forEach(function(tag64, index) {
+                        tag64.replace('Tag64\\[', 'Tag64[');
+                        if(index % 2 === 1) {
+                            var base64 = btoa(tag64);
+                            tag64 = '\uDB40\uDC54\uDB40\uDC41\uDB40\uDC47\uDB40\uDC36\uDB40\uDC34\uDB40\uDC5B';
+                            for(var i = 0; i < base64.length; i++) {
+                                tag64 += String.fromCharCode(56128, 56320 + base64.charCodeAt(i));
+                            }
+                            tag64 += '\uDB40\uDC5D';
+                        }
+                        output += tag64;
+                    });
+                    document.getElementById('encode-output').value = output;
+                }
+            });
+            
+            document.getElementById('decode-submit').addEventListener('click', function() {
+                var text = document.getElementById('decode-input').value;
+                if(text.length === 0) {
+                    document.getElementById('decode-error').removeAttribute('style');
+                } else {
+                    document.getElementById('decode-error').setAttribute('style', 'display:none');
+                    var output = '';
+                    var split = text.split('\uDB40\uDC54\uDB40\uDC41\uDB40\uDC47\uDB40\uDC36\uDB40\uDC34\uDB40\uDC5B').reduce(function(secondSplit, element) {
+                        element.split('\uDB40\uDC5D').forEach(function(newElement) {
+                            secondSplit.push(newElement);
+                        });
+                        return secondSplit;
+                    }, []);
+                    split.forEach(function(tag64, index) {
+                        if(index % 2 === 1) {
+                            var base64 = '';
+                            for(var i = 1; i < tag64.length; i += 2) {
+                                base64 += String.fromCharCode(tag64.charCodeAt(i) - 56320);
+                            }
+                            tag64 = atob(base64);
+                            if(document.getElementById('decode-include-tags').checked) {
+                                tag64 = 'Tag64[' + tag64 + ']';
+                            }
+                        }
+                        output += tag64;
+                    });
+                    document.getElementById('decode-output').value = output;
+                }
+            });
+        </script>
+    </body>
+</html>

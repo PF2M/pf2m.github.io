@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Mii Valentine Creator - PF2M's Website</title>
+        <meta name="viewport" content="height=device-height, user-scalable=no">
+        <link rel="stylesheet" href="stylesheet.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa">
+        <script src="html2canvas.min.js"></script>
+    </head>
+    <body>
+        <div id="valentine" style="color: rgb(0, 128, 255);">
+            <textarea id="message" placeholder="Write a message here." style="color: rgb(0, 128, 255); padding-top: 164px; padding-bottom: 224px; line-height: 48px;" wrap="off"></textarea>
+            <span id="to" class="tf-label">To: </span>
+            <span id="from" class="tf-label">From: </span>
+            <canvas id="mii" width="512" height="512"></canvas>
+            <canvas id="backdrop" width="1024" height="512"></canvas>
+        </div>
+        <h1>Mii Valentine Creator</h1>
+        <p>Click or tap the message text to change what it says.</p>
+        <label>Mii ID: <input type="text" name="id" value="3e9d78802ce9a776" maxlength="16"></label> <a href="https://pastebin.com/Xy7RqKMz" target="_blank">How to find this?</a><br>
+        <label>
+            Mii version: <select name="version">
+                <option value="1">1.0.0 (Miiverse/Wii U) (Broken)</option>
+                <option value="2" selected>2.0.0 (Miitomo/Switch)</option>
+            </select>
+        </label>
+        <label>
+            Expression: <select name="expression">
+                <option value="normal">Normal</option>
+                <option value="smile">Happy</option>
+                <option value="smile_open_mouth">Smile</option>
+                <option value="wink_left">Wink</option>
+                <option value="like_wink_left" selected>Happy wink</option>
+                <option value="wink_left_open_mouth">Wink (open mouth)</option>
+                <option value="surprise">Open eyes</option>
+                <option value="surprise_open_mouth">Surprise</option>
+                <option value="frustrated">Frustration</option>
+                <option value="sorrow">Sorrow</option>
+                <option value="sorrow_open_mouth">Sorrow (open mouth)</option>
+                <option value="anger">Anger</option>
+                <option value="anger_open_mouth">Anger (open mouth)</option>
+                <option value="blink">Blink</option>
+                <option value="blink_open_mouth">Yawn</option>
+            </select>
+        </label><br>
+        <label>
+            Color: <select name="color">
+                <option value="pink">Pink</option>
+                <option value="red">Red</option>
+                <option value="orange">Orange</option>
+                <option value="yellow">Yellow</option>
+                <option value="yellowgreen">Green</option>
+                <option value="skyblue" selected>Blue</option>
+                <option value="purple">Purple</option>
+                <option value="white">White</option>
+                <option value="black">Gray/black</option>
+            </select>
+        </label>
+        <label>Shirt colors: <input type="checkbox" name="shirts" checked></label> <a href="#" onclick="alert('Makes your shirt color match the background of the image. If your Mii comes from Miitomo, this will only work on 1.0.0.')">?</a><br>
+        <style id="font">#valentine, #message { font-family: 'Comfortaa', sans-serif; }</style>
+        <label>
+            Font: <select name="font">
+                <option value="Arial">Arial</option>
+                <option value="Comfortaa" selected>Comfortaa</option>
+                <option value="Comic Sans MS">Comic Sans MS</option>
+                <option value="Helvetica Neue">Helvetica Neue</option>
+                <option value="nintendoPSeurat-M003">Miitomo/Switch</option>
+                <option value="nintendo-NTLG-DB-001">Wii U/3DS</option>
+            </select>
+        </label><br>
+        <label>To: <input id="to-input" type="text" placeholder="To"></label><br>
+        <label>From: <input id="from-input" type="text" placeholder="From"></label><br>
+        <button id="download">Download</button>
+        <canvas id="output"></canvas>
+        <script src="valentine.min.js"></script>
+    </body>
+</html>

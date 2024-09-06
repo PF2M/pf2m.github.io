@@ -1,321 +1,371 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-<title>Mii Renderer</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
+    <head>
+        <title>Mii Renderer</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
             var dat = "";
             async function Entry(inp, type) {
-              Upload($("#mii-id").val(), "id");
+                Upload($("#mii-id").val(), "id");
             }
             async function Upload(inp, type) {
-              let formData = new FormData();
-              if (type == "mii") {
-                var data = inp.files[0];
-              }
+                let formData = new FormData();
+                if (type == "mii") {
+                    var data = inp.files[0];
+                }
 
-              var src = "loading.gif";
-              $(".mii").attr("src", src);
-              $(".mii").attr("width", $(".parameter[name=width]").siblings(".small").text().split("px")[0]);
+                var src = "loading.gif";
+                $(".mii").attr("src", src);
+                $(".mii").attr("width", $(".parameter[name=width]").siblings(".small").text().split("px")[0]);
 
-              if ($("[name=version]").val() == "1.0.0" || $("[name=version]").val() == "2.0.0") {
-                return;
-              } else {
-                formData.append("platform", $("[name=version]").val());
-              }
+                if ($("[name=version]").val() == "1.0.0" || $("[name=version]").val() == "2.0.0") {
+                    return;
+                } else {
+                    formData.append("platform", $("[name=version]").val());
+                }
 
-              if (type == "mii") {
-                formData.append("data", data);
-              } else {
-                formData.append("id", inp);
-              }
+                if (type == "mii") {
+                    formData.append("data", data);
+                } else {
+                    formData.append("id", inp);
+                }
 
-              var mii = "";
-              var miistudio = "";
+                var mii = "";
+                var miistudio = "";
 
-              try {
-                let r = await fetch('https://qrcode.rc24.xyz/cgi-bin/studio.cgi', { method: "POST", body: formData })
-                  .then(response => response.json())
-                  .then(data => {
-                    mii = data.mii;
-                    miistudio = data.miistudio;
-                    name = data.name;
-                    creator_name = data.creator_name;
-                    birthday = data.birthday;
-                    favorite_color = data.favorite_color;
-                    height = data.height;
-                    build = data.build;
-                    gender = data.gender;
-                    mingle = data.mingle;
-                    copying = data.copying;
-                  });
-              } catch (e) {
-                console.log('Error when fetching', e);
-              }
-              dat = mii;
-              change(mii);
-              $(".miistudio").val(miistudio);
-              $(".name").text(name);
-              $(".creator_name").text(creator_name);
-              if (birthday != "00/00")
-              {
-                $(".birthday").text(birthday);
-              }
-              $(".favorite_color").text(favorite_color);
-              $(".height").text(height);
-              $(".build").text(build);
-              $(".gender").text(gender);
-              $(".mingle").text(mingle);
-              $(".copying").text(copying);
-
+                try {
+                    let r = await fetch("https://qrcode.rc24.xyz/cgi-bin/studio.cgi", { method: "POST", body: formData })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            mii = data.mii;
+                            miistudio = data.miistudio;
+                            name = data.name;
+                            creator_name = data.creator_name;
+                            birthday = data.birthday;
+                            favorite_color = data.favorite_color;
+                            height = data.height;
+                            build = data.build;
+                            gender = data.gender;
+                            mingle = data.mingle;
+                            copying = data.copying;
+                        });
+                } catch (e) {
+                    console.log("Error when fetching", e);
+                }
+                dat = mii;
+                change(mii);
+                $(".miistudio").val(miistudio);
+                $(".name").text(name);
+                $(".creator_name").text(creator_name);
+                if (birthday != "00/00") {
+                    $(".birthday").text(birthday);
+                }
+                $(".favorite_color").text(favorite_color);
+                $(".height").text(height);
+                $(".build").text(build);
+                $(".gender").text(gender);
+                $(".mingle").text(mingle);
+                $(".copying").text(copying);
             }
             function decimalToHex(d) {
-              var hex = Number(d).toString(16).toUpperCase();
-              if (hex.length == 1) hex = "0" + hex;
-              return hex;
+                var hex = Number(d).toString(16).toUpperCase();
+                if (hex.length == 1) hex = "0" + hex;
+                return hex;
             }
             $(document).ready(function () {
-              $("input[type=range]").on("change", function () {
-                if ($(this)[0].hasAttribute("list")) {
-                  var selected = $("datalist#" + $(this).attr("list")).children("option[value=" + $(this).val() + "]");
-                  if (selected[0].hasAttribute("label")) {
-                    $(this).siblings(".small").text(selected.attr("label"));
-                  } else {
-                    $(this).siblings(".small").text($(this).val());
-                  }
-                } else {
-                  $(this).siblings(".small").text($(this).val());
-                }
-              });
-              $(".lightbox").on("change", function () {
-                if ($(this).prop("checked")) {
-                  $(".light").removeAttr("disabled");
-                } else {
-                  $(".light").attr("disabled", "true");
-                }
-              });
-              $("input, select").on("change", function () {
-                if (dat != "") {
-                  change(dat);
-                } else {
-                  change("");
-                }
-              });
+                $("input[type=range]").on("change", function () {
+                    if ($(this)[0].hasAttribute("list")) {
+                        var selected = $("datalist#" + $(this).attr("list")).children("option[value=" + $(this).val() + "]");
+                        if (selected[0].hasAttribute("label")) {
+                            $(this).siblings(".small").text(selected.attr("label"));
+                        } else {
+                            $(this).siblings(".small").text($(this).val());
+                        }
+                    } else {
+                        $(this).siblings(".small").text($(this).val());
+                    }
+                });
+                $(".lightbox").on("change", function () {
+                    if ($(this).prop("checked")) {
+                        $(".light").removeAttr("disabled");
+                    } else {
+                        $(".light").attr("disabled", "true");
+                    }
+                });
+                $("input, select").on("change", function () {
+                    if (dat != "") {
+                        change(dat);
+                    } else {
+                        change("");
+                    }
+                });
             });
 
-          function change(mii) {
-              $(".mii").attr("width", $(".parameter[name=width]").siblings(".small").text().split("px")[0]);
-              $(".parameter[name=width]").val($(".parameter[name=width]").siblings(".small").text().split("px")[0]);
-              $(".parameter[name=bgColor]").val($(".parameter[name=bgColor]").siblings("[name=bgColor]").val().split("#")[1].toUpperCase() + decimalToHex($("[name=bgColorOpacity]").val()));
-              if ($("[name=version]").val() == "1.0.0" || $("[name=version]").val() == "2.0.0") {
-                var src = "https://cdn-mii.accounts.nintendo.com/" + $("[name=version]").val() + "/miis/" + $("[name=id]").val() + "/image/68747470733a2f2f-7066326d2e636f6d." + $("[name=format]").val() + "?" + $(".parameter:not(:disabled)").serialize();
-                $(".mii").attr("src", src);
-              } else if (mii != "") {
-                var src = "https://studio.mii.nintendo.com/miis/image.png?data=" + mii + "&" + $(".parameter:not(:disabled)").serialize();
-                $(".mii").attr("src", src);
-              }
-            };
-
+            function change(mii) {
+                $(".mii").attr("width", $(".parameter[name=width]").siblings(".small").text().split("px")[0]);
+                $(".parameter[name=width]").val($(".parameter[name=width]").siblings(".small").text().split("px")[0]);
+                $(".parameter[name=bgColor]").val($(".parameter[name=bgColor]").siblings("[name=bgColor]").val().split("#")[1].toUpperCase() + decimalToHex($("[name=bgColorOpacity]").val()));
+                if ($("[name=version]").val() == "1.0.0" || $("[name=version]").val() == "2.0.0") {
+                    var src =
+                        "https://cdn-mii.accounts.nintendo.com/" +
+                        $("[name=version]").val() +
+                        "/miis/" +
+                        $("[name=id]").val() +
+                        "/image/68747470733a2f2f-7066326d2e636f6d." +
+                        $("[name=format]").val() +
+                        "?" +
+                        $(".parameter:not(:disabled)").serialize();
+                    $(".mii").attr("src", src);
+                } else if (mii != "") {
+                    var src = "https://studio.mii.nintendo.com/miis/image.png?data=" + mii + "&" + $(".parameter:not(:disabled)").serialize();
+                    $(".mii").attr("src", src);
+                }
+            }
         </script>
-<style>
+        <style>
             body {
-              font-family: sans-serif;
-              line-height: 150%;
-              text-align: center;
-              background-image: url("background-plaza.png");
-              background-repeat: repeat;
+                font-family: sans-serif;
+                line-height: 150%;
+                text-align: center;
+                background-image: url("background-plaza.png");
+                background-repeat: repeat;
             }
             .small {
-              font-size: 12px;
+                font-size: 12px;
             }
             .mii {
-              border-radius: 5px;
-              max-width: calc(100vw - 32px);
-              border: 1px solid #808080;
+                border-radius: 5px;
+                max-width: calc(100vw - 32px);
+                border: 1px solid #808080;
             }
         </style>
 
-<meta name="language" content="en">
-<meta name="title" content="Mii Renderer" />
-<meta name="robots" content="index, follow" />
-<meta name="subject" content="Mii">
-<meta name="keywords" content="Nintendo, Wii, Mii, 3DS, Switch, Wii U, Check Mii Out Channel, Render, WiiConnect24, Miiverse">
-<meta name="description" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like.">
-<meta name="classification" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like.">
+        <meta name="language" content="en" />
+        <meta name="title" content="Mii Renderer" />
+        <meta name="robots" content="index, follow" />
+        <meta name="subject" content="Mii" />
+        <meta name="keywords" content="Nintendo, Wii, Mii, 3DS, Switch, Wii U, Check Mii Out Channel, Render, WiiConnect24, Miiverse" />
+        <meta name="description" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like." />
+        <meta name="classification" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like." />
 
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Mii Renderer" />
-<meta property="og:locale" content="en" />
-<meta property="og:site_name" content="Mii Renderer" />
-<meta property="og:description" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like.">
-</head>
-<body>
-<h2>Mii Renderer</h2>
-<p>This is a tool to render a Mii into image form. It works for any type of Mii - ones created on the Wii, a QR Code, or even a Mii on RiiConnect24's Check Mii Out Channel! The output can be customized however you like. This works great to use as a profile picture!</p>
-<p>Check out <a href="https://miicontest.wiilink.ca/">miicontest.wiilink.ca</a> for more Mii content!</p>
-<br>
-<label>Mii Type: <select name="version">
-<option value="wii" selected>Wii</option>
-<option value="gen2">3DS / Wii U / Miitomo</option>
-<option value="switch">Switch (HOME Menu Dump)</option>
-<option value="switchgame">Switch (Game Dump)</option>
-<option value="studio">Mii Studio</option>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Mii Renderer" />
+        <meta property="og:locale" content="en" />
+        <meta property="og:site_name" content="Mii Renderer" />
+        <meta property="og:description" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like." />
+    </head>
+    <body>
+        <h2>Mii Renderer</h2>
+        <p>
+            This is a tool to render a Mii into image form. It works for any type of Mii - ones created on the Wii, a QR Code, or even a Mii on WiiLink's Check Mii Out Channel! The output can be customized however you like. This works
+            great to use as a profile picture!
+        </p>
+        <p>Check out <a href="https://miicontest.wiilink.ca/">miicontest.wiilink.ca</a> for more Mii content!</p>
+        <br />
+        <label>
+            Mii Type:
+            <select name="version">
+                <option value="wii" selected>Wii</option>
+                <option value="gen2">3DS / Wii U / Miitomo</option>
+                <option value="switch">Switch (HOME Menu Dump)</option>
+                <option value="switchgame">Switch (Game Dump)</option>
+                <option value="studio">Mii Studio</option>
 
-<option value="2.0.0">Nintendo Account - 2.0.0 (Switch/Miitomo)</option>
-</select></label>
-<br>
-<br>
-<label>Input File: <input id="image-file" type="file" onchange="var dat = Upload(this, 'mii')" name="mii"></label><br>
-<span class="small">(Mii binary file or QR Code)</span>
-<br>
-<br>
-<label>Nintendo Account ID / <a href="https://miicontest.wiilink.ca/">Check Mii Out Channel</a> Entry Number <input type="text" name="id" id="mii-id" onchange="Entry()" value="5403-6703-1484"><input type="submit" value="Submit" onclick="Entry()"></label><br>
-<span class="small">For instructions on how to get Mii IDs (only if grabbing from a Nintendo Account), please refer to <a href="https://pastebin.com/Xy7RqKMz" target="_blank">this Pastebin</a>.</span><br>
-<br>
-<label>Image</label>
-<br>
-<img id="mii" class="mii" align="center" src="https://cdn-mii.accounts.nintendo.com/2.0.0/miis/3e5328d61bd4860d/image/68747470733a2f2f-7066326d2e636f6d.png?type=face&amp;expression=normal&amp;width=270&amp;bgColor=FFFFFF00&amp;clothesColor=default&amp;cameraXRotate=0&amp;cameraYRotate=0&amp;cameraZRotate=0&amp;characterXRotate=0&amp;characterYRotate=0&amp;characterZRotate=0&amp;lightDirectionMode=none&amp;splitDepthOffset=0&amp;splitMode=front&amp;instanceCount=1&amp;instanceRotationMode=model"><br>
-<br>
-<label>Mii Studio Code</label>
-<br>
-<span class="small">(For use with <a href="https://github.com/HEYimHeroic/MiiStudioMiiLoader">this script</a>)</span>
-<br>
-<textarea id="miistudio" class="miistudio" align="center" rows="6" cols="23"></textarea>
-<br>
-<label>Mii Info</label>
-<br>
-<span class="small">Mii Name: <span class="name" id="name">?</span></span>
-<br>
-<span class="small">Creator Name: <span class="creator_name" id="creator_name">?</span></span>
-<br>
-<span class="small">Birthday: <span class="birthday" id="birthday">??/??</span> (MM/DD)</span>
-<br>
-<span class="small">Favorite Color: <span class="favorite_color" id="favorite_color">?</span></span>
-<br>
-<span class="small">Height: <span class="height" id="height">?</span> / 127</span>
-<br>
-<span class="small">Build: <span class="build" id="build">?</span> / 127</span>
-<br>
-<span class="small">Gender: <span class="gender" id="gender">?</span></span>
-<br>
-<span class="small">Mingle: <span class="mingle" id="mingle">?</span></span>
-<br>
-<span class="small">Copying: <span class="copying" id="copying">?</span></span>
-<br>
-<hr>
-<h3>Options</h3>
-<br>
-<label>Format: <select name="format">
-<option value="png">PNG</option>
-<option value="tga">TGA</option>
-</select></label><br>
-<div class="parameters">
-<label>Type: <select class="parameter" name="type">
-<option value="face">Face</option>
-<option value="face_only">Head</option>
-<option value="all_body">Body</option>
-</select></label><br>
-<label>Expression: <select class="parameter" name="expression">
-<option value="normal">Normal</option>
-<option value="smile">Smile</option>
-<option value="anger">Anger</option>
-<option value="sorrow">Sorrow</option>
-<option value="surprise">Surprise</option>
-<option value="blink">Blink</option>
-<option value="normal_open_mouth">Normal (open mouth)</option>
-<option value="smile_open_mouth">Smile (open mouth)</option>
-<option value="anger_open_mouth">Anger (open mouth)</option>
-<option value="surprise_open_mouth">Surprise (open mouth)</option>
-<option value="sorrow_open_mouth">Sorrow (open mouth)</option>
-<option value="blink_open_mouth">Blink (open mouth)</option>
-<option value="wink_left">Wink (left eye open)</option>
-<option value="wink_right">Wink (right eye open)</option>
-<option value="wink_left_open_mouth">Wink (left eye and mouth open)</option>
-<option value="wink_right_open_mouth">Wink (right eye and mouth open)</option>
-<option value="like_wink_left">Wink (left eye open, Miiverse-style)</option>
-<option value="like_wink_right">Wink (right eye open, Miiverse-style)</option>
-<option value="frustrated">Frustrated</option>
-</select></label><br>
-<label>Width: <input name="width" type="range" min="1" max="5" step="1" list="face" value="4"> <span class="small">270px</span>
-<datalist id="face">
-<option value="1" label="96px">
-<option value="2" label="128px">
-<option value="3" label="140px">
-<option value="4" label="270px">
-<option value="5" label="512px">
-</datalist>
-<datalist id="body">
-<option value="1" label="96px">
-<option value="5" label="270px">
-</datalist>
-<input class="parameter" name="width" type="hidden" value="270">
-</label><br>
-<label>Background color: <input name="bgColor" type="color" value="#ffffff">
-<input class="parameter" name="bgColor" type="hidden"></label><br>
-<label>Background color opacity: <input name="bgColorOpacity" type="range" min="0" max="255" value="0"> <span class="small">0</span></label><br>
-<label>Clothes color: <select class="parameter" name="clothesColor">
-<option value="default">Default</option>
-<option value="red">Red</option>
-<option value="orange">Orange</option>
-<option value="yellow">Yellow</option>
-<option value="yellowgreen">Light green</option>
-<option value="green">Dark green</option>
-<option value="blue">Dark blue</option>
-<option value="skyblue">Light blue</option>
-<option value="pink">Pink</option>
-<option value="purple">Purple</option>
-<option value="brown">Brown</option>
-<option value="white">White</option>
-<option value="black">Black</option>
-</select></label><br>
-<label>Camera X rotation: <input class="parameter" name="cameraXRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
-<label>Camera Y rotation: <input class="parameter" name="cameraYRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
-<label>Camera Z rotation: <input class="parameter" name="cameraZRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
-<label>Character X rotation: <input class="parameter" name="characterXRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
-<label>Character Y rotation: <input class="parameter" name="characterYRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
-<label>Character Z rotation: <input class="parameter" name="characterZRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
-<label>Allow light direction settings (helpful for 2.0): <input class="lightbox" type="checkbox"></label><br>
-<label>Light X direction: <input class="parameter light" name="lightXDirection" type="range" min="0" max="359" value="0" disabled> <span class="small">0</span></label><br>
-<label>Light Y direction: <input class="parameter light" name="lightYDirection" type="range" min="0" max="359" value="0" disabled> <span class="small">0</span></label><br>
-<label>Light Z direction: <input class="parameter light" name="lightZDirection" type="range" min="0" max="359" value="0" disabled> <span class="small">0</span></label><br>
-<label>Light direction mode: <select class="parameter" name="lightDirectionMode">
-<option value="none">None</option>
-<option value="zerox">Zero X</option>
-<option value="flipx">Flip X</option>
-<option value="camera">Camera</option>
-<option value="offset">Offset</option>
-<option value="set">Set</option>
-</select></label><br>
+                <option value="2.0.0">Nintendo Account - 2.0.0 (Switch/Miitomo)</option>
+            </select>
+        </label>
+        <br />
+        <br />
+        <label>Input File: <input id="image-file" type="file" onchange="var dat = Upload(this, 'mii')" name="mii" /></label><br />
+        <span class="small">(Mii binary file or QR Code)</span>
+        <br />
+        <br />
+        <label>
+            Nintendo Account ID / <a href="https://miicontest.wiilink.ca/">Check Mii Out Channel</a> Entry Number <input type="text" name="id" id="mii-id" onchange="Entry()" value="5403-6703-1484" />
+            <input type="submit" value="Submit" onclick="Entry()" />
+        </label>
+        <br />
+        <span class="small">For instructions on how to get Mii IDs (only if grabbing from a Nintendo Account), please refer to <a href="https://pastebin.com/Xy7RqKMz" target="_blank">this Pastebin</a>.</span><br />
+        <br />
+        <label>Image</label>
+        <br />
+        <img
+            id="mii"
+            class="mii"
+            align="center"
+            src="https://cdn-mii.accounts.nintendo.com/2.0.0/miis/3e5328d61bd4860d/image/68747470733a2f2f-7066326d2e636f6d.png?type=face&amp;expression=normal&amp;width=270&amp;bgColor=FFFFFF00&amp;clothesColor=default&amp;cameraXRotate=0&amp;cameraYRotate=0&amp;cameraZRotate=0&amp;characterXRotate=0&amp;characterYRotate=0&amp;characterZRotate=0&amp;lightDirectionMode=none&amp;splitDepthOffset=0&amp;splitMode=front&amp;instanceCount=1&amp;instanceRotationMode=model"
+        />
+        <br />
+        <br />
+        <label>Mii Studio Code</label>
+        <br />
+        <span class="small">(For use with <a href="https://github.com/HEYimHeroic/MiiStudioMiiLoader">this script</a>)</span>
+        <br />
+        <textarea id="miistudio" class="miistudio" align="center" rows="6" cols="23"></textarea>
+        <br />
+        <label>Mii Info</label>
+        <br />
+        <span class="small">Mii Name: <span class="name" id="name">?</span></span>
+        <br />
+        <span class="small">Creator Name: <span class="creator_name" id="creator_name">?</span></span>
+        <br />
+        <span class="small">Birthday: <span class="birthday" id="birthday">??/??</span> (MM/DD)</span>
+        <br />
+        <span class="small">Favorite Color: <span class="favorite_color" id="favorite_color">?</span></span>
+        <br />
+        <span class="small">Height: <span class="height" id="height">?</span> / 127</span>
+        <br />
+        <span class="small">Build: <span class="build" id="build">?</span> / 127</span>
+        <br />
+        <span class="small">Gender: <span class="gender" id="gender">?</span></span>
+        <br />
+        <span class="small">Mingle: <span class="mingle" id="mingle">?</span></span>
+        <br />
+        <span class="small">Copying: <span class="copying" id="copying">?</span></span>
+        <br />
+        <hr />
+        <h3>Options</h3>
+        <br />
+        <label>
+            Format:
+            <select name="format">
+                <option value="png">PNG</option>
+                <option value="tga">TGA</option>
+            </select>
+        </label>
+        <br />
+        <div class="parameters">
+            <label>
+                Type:
+                <select class="parameter" name="type">
+                    <option value="face">Face</option>
+                    <option value="face_only">Head</option>
+                    <option value="all_body">Body</option>
+                </select>
+            </label>
+            <br />
+            <label>
+                Expression:
+                <select class="parameter" name="expression">
+                    <option value="normal">Normal</option>
+                    <option value="smile">Smile</option>
+                    <option value="anger">Anger</option>
+                    <option value="sorrow">Sorrow</option>
+                    <option value="surprise">Surprise</option>
+                    <option value="blink">Blink</option>
+                    <option value="normal_open_mouth">Normal (open mouth)</option>
+                    <option value="smile_open_mouth">Smile (open mouth)</option>
+                    <option value="anger_open_mouth">Anger (open mouth)</option>
+                    <option value="surprise_open_mouth">Surprise (open mouth)</option>
+                    <option value="sorrow_open_mouth">Sorrow (open mouth)</option>
+                    <option value="blink_open_mouth">Blink (open mouth)</option>
+                    <option value="wink_left">Wink (left eye open)</option>
+                    <option value="wink_right">Wink (right eye open)</option>
+                    <option value="wink_left_open_mouth">Wink (left eye and mouth open)</option>
+                    <option value="wink_right_open_mouth">Wink (right eye and mouth open)</option>
+                    <option value="like_wink_left">Wink (left eye open, Miiverse-style)</option>
+                    <option value="like_wink_right">Wink (right eye open, Miiverse-style)</option>
+                    <option value="frustrated">Frustrated</option>
+                </select>
+            </label>
+            <br />
+            <label>
+                Width: <input name="width" type="range" min="1" max="5" step="1" list="face" value="4" /> <span class="small">270px</span>
+                <datalist id="face">
+                    <option value="1" label="96px"> </option>
+                    <option value="2" label="128px"> </option>
+                    <option value="3" label="140px"> </option>
+                    <option value="4" label="270px"> </option>
+                    <option value="5" label="512px"> </option>
+                </datalist>
 
-<label>Instance count: <input class="parameter" name="instanceCount" type="range" min="1" max="16" list="instances" value="1"> <span class="small">1</span>
-<datalist id="instances">
-<option value="1" label="1">
-<option value="2" label="2">
-<option value="3" label="3">
-<option value="4" label="4">
-<option value="5" label="5">
-<option value="6" label="6">
-<option value="7" label="7">
-<option value="8" label="8">
-<option value="9" label="9">
-<option value="10" label="10">
-<option value="11" label="11">
-<option value="12" label="12">
-<option value="13" label="13">
-<option value="14" label="14">
-<option value="15" label="15">
-<option value="16" label="16">
-</datalist>
-</label><br>
-<label>Instance rotation mode: <select class="parameter" name="instanceRotationMode">
-<option value="model">Model</option>
-<option value="camera">Camera</option>
-<option value="both">Both</option>
-</select></label>
-</div>
-<br>
-<hr>
-<br>
-<label>Credits: bendevnull, Genwald, HEYimHeroic, jaames, Larsenv, Matthe815, PF2M</label>
-</body>
+                <datalist id="body">
+                    <option value="1" label="96px"> </option>
+                    <option value="5" label="270px"> </option>
+                </datalist>
+
+                <input class="parameter" name="width" type="hidden" value="270" />
+            </label>
+            <br />
+            <label>Background color: <input name="bgColor" type="color" value="#ffffff" /> <input class="parameter" name="bgColor" type="hidden" /></label><br />
+            <label>Background color opacity: <input name="bgColorOpacity" type="range" min="0" max="255" value="0" /> <span class="small">0</span></label><br />
+            <label>
+                Clothes color:
+                <select class="parameter" name="clothesColor">
+                    <option value="default">Default</option>
+                    <option value="red">Red</option>
+                    <option value="orange">Orange</option>
+                    <option value="yellow">Yellow</option>
+                    <option value="yellowgreen">Light green</option>
+                    <option value="green">Dark green</option>
+                    <option value="blue">Dark blue</option>
+                    <option value="skyblue">Light blue</option>
+                    <option value="pink">Pink</option>
+                    <option value="purple">Purple</option>
+                    <option value="brown">Brown</option>
+                    <option value="white">White</option>
+                    <option value="black">Black</option>
+                </select>
+            </label>
+            <br />
+            <label>Camera X rotation: <input class="parameter" name="cameraXRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
+            <label>Camera Y rotation: <input class="parameter" name="cameraYRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
+            <label>Camera Z rotation: <input class="parameter" name="cameraZRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
+            <label>Character X rotation: <input class="parameter" name="characterXRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
+            <label>Character Y rotation: <input class="parameter" name="characterYRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
+            <label>Character Z rotation: <input class="parameter" name="characterZRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
+            <label>Allow light direction settings (helpful for 2.0): <input class="lightbox" type="checkbox" /></label><br />
+            <label>Light X direction: <input class="parameter light" name="lightXDirection" type="range" min="0" max="359" value="0" disabled /> <span class="small">0</span></label><br />
+            <label>Light Y direction: <input class="parameter light" name="lightYDirection" type="range" min="0" max="359" value="0" disabled /> <span class="small">0</span></label><br />
+            <label>Light Z direction: <input class="parameter light" name="lightZDirection" type="range" min="0" max="359" value="0" disabled /> <span class="small">0</span></label><br />
+            <label>
+                Light direction mode:
+                <select class="parameter" name="lightDirectionMode">
+                    <option value="none">None</option>
+                    <option value="zerox">Zero X</option>
+                    <option value="flipx">Flip X</option>
+                    <option value="camera">Camera</option>
+                    <option value="offset">Offset</option>
+                    <option value="set">Set</option>
+                </select>
+            </label>
+            <br />
+
+            <label>
+                Instance count: <input class="parameter" name="instanceCount" type="range" min="1" max="16" list="instances" value="1" /> <span class="small">1</span>
+                <datalist id="instances">
+                    <option value="1" label="1"> </option>
+                    <option value="2" label="2"> </option>
+                    <option value="3" label="3"> </option>
+                    <option value="4" label="4"> </option>
+                    <option value="5" label="5"> </option>
+                    <option value="6" label="6"> </option>
+                    <option value="7" label="7"> </option>
+                    <option value="8" label="8"> </option>
+                    <option value="9" label="9"> </option>
+                    <option value="10" label="10"> </option>
+                    <option value="11" label="11"> </option>
+                    <option value="12" label="12"> </option>
+                    <option value="13" label="13"> </option>
+                    <option value="14" label="14"> </option>
+                    <option value="15" label="15"> </option>
+                    <option value="16" label="16"> </option>
+                </datalist>
+            </label>
+            <br />
+            <label>
+                Instance rotation mode:
+                <select class="parameter" name="instanceRotationMode">
+                    <option value="model">Model</option>
+                    <option value="camera">Camera</option>
+                    <option value="both">Both</option>
+                </select>
+            </label>
+        </div>
+        <br />
+        <hr />
+        <br />
+        <label>Credits: bendevnull, Genwald, HEYimHeroic, jaames, Larsenv, Matthe815, PF2M</label>
+    </body>
 </html>
+

@@ -1,127 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="UTF-8">
         <title>Mii Renderer</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script>
-            var dat = "";
-            async function Entry(inp, type) {
-                Upload($("#mii-id").val(), "id");
-            }
-            async function Upload(inp, type) {
-                let formData = new FormData();
-                if (type == "mii") {
-                    var data = inp.files[0];
-                }
-
-                var src = "loading.gif";
-                $(".mii").attr("src", src);
-                $(".mii").attr("width", $(".parameter[name=width]").siblings(".small").text().split("px")[0]);
-
-                if ($("[name=version]").val() == "1.0.0" || $("[name=version]").val() == "2.0.0") {
-                    return;
-                } else {
-                    formData.append("platform", $("[name=version]").val());
-                }
-
-                if (type == "mii") {
-                    formData.append("data", data);
-                } else {
-                    formData.append("id", inp);
-                }
-
-                var mii = "";
-                var miistudio = "";
-
-                try {
-                    let r = await fetch("https://qrcode.rc24.xyz/cgi-bin/studio.cgi", { method: "POST", body: formData })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            mii = data.mii;
-                            miistudio = data.miistudio;
-                            name = data.name;
-                            creator_name = data.creator_name;
-                            birthday = data.birthday;
-                            favorite_color = data.favorite_color;
-                            height = data.height;
-                            build = data.build;
-                            gender = data.gender;
-                            mingle = data.mingle;
-                            copying = data.copying;
-                        });
-                } catch (e) {
-                    console.log("Error when fetching", e);
-                }
-                dat = mii;
-                change(mii);
-                $(".miistudio").val(miistudio);
-                $(".name").text(name);
-                $(".creator_name").text(creator_name);
-                if (birthday != "00/00") {
-                    $(".birthday").text(birthday);
-                }
-                $(".favorite_color").text(favorite_color);
-                $(".height").text(height);
-                $(".build").text(build);
-                $(".gender").text(gender);
-                $(".mingle").text(mingle);
-                $(".copying").text(copying);
-            }
-            function decimalToHex(d) {
-                var hex = Number(d).toString(16).toUpperCase();
-                if (hex.length == 1) hex = "0" + hex;
-                return hex;
-            }
-            $(document).ready(function () {
-                $("input[type=range]").on("change", function () {
-                    if ($(this)[0].hasAttribute("list")) {
-                        var selected = $("datalist#" + $(this).attr("list")).children("option[value=" + $(this).val() + "]");
-                        if (selected[0].hasAttribute("label")) {
-                            $(this).siblings(".small").text(selected.attr("label"));
-                        } else {
-                            $(this).siblings(".small").text($(this).val());
-                        }
-                    } else {
-                        $(this).siblings(".small").text($(this).val());
-                    }
-                });
-                $(".lightbox").on("change", function () {
-                    if ($(this).prop("checked")) {
-                        $(".light").removeAttr("disabled");
-                    } else {
-                        $(".light").attr("disabled", "true");
-                    }
-                });
-                $("input, select").on("change", function () {
-                    if (dat != "") {
-                        change(dat);
-                    } else {
-                        change("");
-                    }
-                });
-            });
-
-            function change(mii) {
-                $(".mii").attr("width", $(".parameter[name=width]").siblings(".small").text().split("px")[0]);
-                $(".parameter[name=width]").val($(".parameter[name=width]").siblings(".small").text().split("px")[0]);
-                $(".parameter[name=bgColor]").val($(".parameter[name=bgColor]").siblings("[name=bgColor]").val().split("#")[1].toUpperCase() + decimalToHex($("[name=bgColorOpacity]").val()));
-                if ($("[name=version]").val() == "1.0.0" || $("[name=version]").val() == "2.0.0") {
-                    var src =
-                        "https://cdn-mii.accounts.nintendo.com/" +
-                        $("[name=version]").val() +
-                        "/miis/" +
-                        $("[name=id]").val() +
-                        "/image/68747470733a2f2f-7066326d2e636f6d." +
-                        $("[name=format]").val() +
-                        "?" +
-                        $(".parameter:not(:disabled)").serialize();
-                    $(".mii").attr("src", src);
-                } else if (mii != "") {
-                    var src = "https://studio.mii.nintendo.com/miis/image.png?data=" + mii + "&" + $(".parameter:not(:disabled)").serialize();
-                    $(".mii").attr("src", src);
-                }
-            }
-        </script>
+        <script src="script.js"></script>
         <style>
             body {
                 font-family: sans-serif;
@@ -146,19 +30,19 @@
             }
         </style>
 
-        <meta name="language" content="en" />
-        <meta name="title" content="Mii Renderer" />
-        <meta name="robots" content="index, follow" />
-        <meta name="subject" content="Mii" />
-        <meta name="keywords" content="Nintendo, Wii, Mii, 3DS, Switch, Wii U, Check Mii Out Channel, Render, WiiConnect24, Miiverse" />
-        <meta name="description" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like." />
-        <meta name="classification" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like." />
+        <meta name="language" content="en">
+        <meta name="title" content="Mii Renderer">
+        <meta name="robots" content="index, follow">
+        <meta name="subject" content="Mii">
+        <meta name="keywords" content="Nintendo, Wii, Mii, 3DS, Switch, Wii U, Check Mii Out Channel, Render, WiiConnect24, Miiverse">
+        <meta name="description" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like.">
+        <meta name="classification" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like.">
 
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Mii Renderer" />
-        <meta property="og:locale" content="en" />
-        <meta property="og:site_name" content="Mii Renderer" />
-        <meta property="og:description" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like." />
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Mii Renderer">
+        <meta property="og:locale" content="en">
+        <meta property="og:site_name" content="Mii Renderer">
+        <meta property="og:description" content="This is a tool to render a Mii into image form. It works for any type of Mii! The output can be customized however you like.">
     </head>
     <body>
         <h2>Mii Renderer</h2>
@@ -184,17 +68,17 @@
                 <option value="2.0.0">Nintendo Account - 2.0.0 (Switch/Miitomo)</option>
             </select>
         </label>
-        <br />
-        <br />
-        <label>Input File: <input id="image-file" type="file" onchange="var dat = Upload(this, 'mii')" name="mii" /></label><br />
+        <br>
+        <br>
+        <label>Input File: <input id="image-file" type="file" onchange="var dat = Upload(this, 'mii')" name="mii"></label><br>
         <span class="small">(Mii binary file or QR Code)</span>
-        <br />
-        <br />
+        <br>
+        <br>
         <label>
-            Nintendo Account ID / <a href="https://miicontest.wiilink.ca/">Check Mii Out Channel</a> Entry Number <input type="text" name="id" id="mii-id" onchange="Entry()" value="5403-6703-1484" />
-            <input type="submit" value="Submit" onclick="Entry()" />
+            Nintendo Account ID / <a href="https://miicontest.wiilink.ca/">Check Mii Out Channel</a> Entry Number <input type="text" name="id" id="mii-id" onchange="Entry()" value="5403-6703-1484">
+            <input type="submit" value="Submit" onclick="Entry()">
         </label>
-        <br />
+        <br>
         <!--
         <span class="small">For instructions on how to get Mii IDs (only if grabbing from a Nintendo Account), please refer to <a href="https://pastebin.com/Xy7RqKMz" target="_blank">this Pastebin</a>.</span>-->
         <details>
@@ -231,47 +115,47 @@ Mii Studio:
 Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
             </pre>
         </details>
-        <br />
-        <br />
+        <br>
+        <br>
         <label>Image</label>
-        <br />
+        <br>
         <img
             id="mii"
             class="mii"
             align="center"
             src="https://cdn-mii.accounts.nintendo.com/2.0.0/miis/a6eec3a6cf628d5d/image/68747470733a2f2f-7066326d2e636f6d.png?type=face&amp;expression=normal&amp;width=270&amp;bgColor=FFFFFF00&amp;clothesColor=default&amp;cameraXRotate=0&amp;cameraYRotate=0&amp;cameraZRotate=0&amp;characterXRotate=0&amp;characterYRotate=0&amp;characterZRotate=0&amp;lightDirectionMode=none&amp;splitDepthOffset=0&amp;splitMode=front&amp;instanceCount=1&amp;instanceRotationMode=model"
-        />
-        <br />
-        <br />
+       >
+        <br>
+        <br>
         <label>Mii Studio Code</label>
-        <br />
+        <br>
         <span class="small">(For use with <a href="https://github.com/HEYimHeroic/MiiStudioMiiLoader">this script</a>)</span>
-        <br />
+        <br>
         <textarea id="miistudio" class="miistudio" align="center" rows="6" cols="23"></textarea>
-        <br />
+        <br>
         <label>Mii Info</label>
-        <br />
+        <br>
         <span class="small">Mii Name: <span class="name" id="name">?</span></span>
-        <br />
+        <br>
         <span class="small">Creator Name: <span class="creator_name" id="creator_name">?</span></span>
-        <br />
+        <br>
         <span class="small">Birthday: <span class="birthday" id="birthday">??/??</span> (MM/DD)</span>
-        <br />
+        <br>
         <span class="small">Favorite Color: <span class="favorite_color" id="favorite_color">?</span></span>
-        <br />
+        <br>
         <span class="small">Height: <span class="height" id="height">?</span> / 127</span>
-        <br />
+        <br>
         <span class="small">Build: <span class="build" id="build">?</span> / 127</span>
-        <br />
+        <br>
         <span class="small">Gender: <span class="gender" id="gender">?</span></span>
-        <br />
+        <br>
         <span class="small">Mingle: <span class="mingle" id="mingle">?</span></span>
-        <br />
+        <br>
         <span class="small">Copying: <span class="copying" id="copying">?</span></span>
-        <br />
-        <hr />
+        <br>
+        <hr>
         <h3>Options</h3>
-        <br />
+        <br>
         <label>
             Format:
             <select name="format">
@@ -279,7 +163,7 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
                 <option value="tga">TGA</option>
             </select>
         </label>
-        <br />
+        <br>
         <div class="parameters">
             <label>
                 Type:
@@ -289,7 +173,7 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
                     <option value="all_body">Body</option>
                 </select>
             </label>
-            <br />
+            <br>
             <label>
                 Expression:
                 <select class="parameter" name="expression">
@@ -314,9 +198,9 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
                     <option value="frustrated">Frustrated</option>
                 </select>
             </label>
-            <br />
+            <br>
             <label>
-                Width: <input name="width" type="range" min="1" max="5" step="1" list="face" value="4" /> <span class="small">270px</span>
+                Width: <input name="width" type="range" min="1" max="5" step="1" list="face" value="4"> <span class="small">270px</span>
                 <datalist id="face">
                     <option value="1" label="96px"> </option>
                     <option value="2" label="128px"> </option>
@@ -330,11 +214,11 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
                     <option value="5" label="270px"> </option>
                 </datalist>
 
-                <input class="parameter" name="width" type="hidden" value="270" />
+                <input class="parameter" name="width" type="hidden" value="270">
             </label>
-            <br />
-            <label>Background color: <input name="bgColor" type="color" value="#ffffff" /> <input class="parameter" name="bgColor" type="hidden" /></label><br />
-            <label>Background color opacity: <input name="bgColorOpacity" type="range" min="0" max="255" value="0" /> <span class="small">0</span></label><br />
+            <br>
+            <label>Background color: <input name="bgColor" type="color" value="#ffffff"> <input class="parameter" name="bgColor" type="hidden"></label><br>
+            <label>Background color opacity: <input name="bgColorOpacity" type="range" min="0" max="255" value="0"> <span class="small">0</span></label><br>
             <label>
                 Clothes color:
                 <select class="parameter" name="clothesColor">
@@ -353,17 +237,17 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
                     <option value="black">Black</option>
                 </select>
             </label>
-            <br />
-            <label>Camera X rotation: <input class="parameter" name="cameraXRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
-            <label>Camera Y rotation: <input class="parameter" name="cameraYRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
-            <label>Camera Z rotation: <input class="parameter" name="cameraZRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
-            <label>Character X rotation: <input class="parameter" name="characterXRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
-            <label>Character Y rotation: <input class="parameter" name="characterYRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
-            <label>Character Z rotation: <input class="parameter" name="characterZRotate" type="range" min="0" max="359" value="0" /> <span class="small">0</span></label><br />
-            <label>Allow light direction settings (helpful for 2.0): <input class="lightbox" type="checkbox" /></label><br />
-            <label>Light X direction: <input class="parameter light" name="lightXDirection" type="range" min="0" max="359" value="0" disabled /> <span class="small">0</span></label><br />
-            <label>Light Y direction: <input class="parameter light" name="lightYDirection" type="range" min="0" max="359" value="0" disabled /> <span class="small">0</span></label><br />
-            <label>Light Z direction: <input class="parameter light" name="lightZDirection" type="range" min="0" max="359" value="0" disabled /> <span class="small">0</span></label><br />
+            <br>
+            <label>Camera X rotation: <input class="parameter" name="cameraXRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
+            <label>Camera Y rotation: <input class="parameter" name="cameraYRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
+            <label>Camera Z rotation: <input class="parameter" name="cameraZRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
+            <label>Character X rotation: <input class="parameter" name="characterXRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
+            <label>Character Y rotation: <input class="parameter" name="characterYRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
+            <label>Character Z rotation: <input class="parameter" name="characterZRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></label><br>
+            <label>Allow light direction settings (helpful for 2.0): <input class="lightbox" type="checkbox"></label><br>
+            <label>Light X direction: <input class="parameter light" name="lightXDirection" type="range" min="0" max="359" value="0" disabled> <span class="small">0</span></label><br>
+            <label>Light Y direction: <input class="parameter light" name="lightYDirection" type="range" min="0" max="359" value="0" disabled> <span class="small">0</span></label><br>
+            <label>Light Z direction: <input class="parameter light" name="lightZDirection" type="range" min="0" max="359" value="0" disabled> <span class="small">0</span></label><br>
             <label>
                 Light direction mode:
                 <select class="parameter" name="lightDirectionMode">
@@ -375,10 +259,10 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
                     <option value="set">Set</option>
                 </select>
             </label>
-            <br />
+            <br>
 
             <label>
-                Instance count: <input class="parameter" name="instanceCount" type="range" min="1" max="16" list="instances" value="1" /> <span class="small">1</span>
+                Instance count: <input class="parameter" name="instanceCount" type="range" min="1" max="16" list="instances" value="1"> <span class="small">1</span>
                 <datalist id="instances">
                     <option value="1" label="1"> </option>
                     <option value="2" label="2"> </option>
@@ -398,7 +282,7 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
                     <option value="16" label="16"> </option>
                 </datalist>
             </label>
-            <br />
+            <br>
             <label>
                 Instance rotation mode:
                 <select class="parameter" name="instanceRotationMode">
@@ -408,8 +292,8 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
                 </select>
             </label>
         </div>
-        <br />
-        <hr />
+        <br>
+        <hr>
         <p>Credits:
             <a href="https://pf2m.com">PF2M</a>,
 
@@ -423,4 +307,3 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
         </p>
     </body>
 </html>
-

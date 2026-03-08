@@ -35,13 +35,13 @@
         <!-- Import section (MiiImportController) -->
         <div class="import-section">
 
-            <!-- Source: Text (hex/base64/CMOC code/Account ID) -->
+            <!-- Source: Text (hex/base64/CMOC code/cdn-mii ID) -->
             <div class="source-row state-idle" id="row-text" tabindex="0">
                 <input type="radio" name="active-source" id="radio-text" tabindex="-1">
                 <label class="source-label" for="radio-text">Text</label>
                 <div class="source-input">
                     <input type="text" id="text-input"
-                        placeholder="Hex/Base64 data, CMOC code (5403-6703-1484), or Account ID"
+                        placeholder="Hex/Base64 data, CMOC code (5403-6703-1484), or cdn-mii ID"
                         value="a6eec3a6cf628d5d">
                 </div>
                 <span class="loaded-tag" id="loaded-text" style="display: none;"></span>
@@ -346,7 +346,7 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
         <h3>Credits</h3>
         <ul class="left">
             <li><a target="_blank" href="https://pf2m.com">PF2M</a> - original <a target="_blank" href="https://web.archive.org/web/20180221000405/https://pf2m.com/tools/mii/">2017 tool</a></li>
-            <li><a target="_blank" href="https://github.com/ariankordi">Arian</a> - 2026 rewrite from scratch</li>
+            <li><a target="_blank" href="https://github.com/ariankordi">Arian</a> - 2026 rewrite from scratch (<a href="../mii-2020/">see old version</a>)</li>
 
             <li>mii2studio authors:
                 <a target="_blank" href="https://github.com/bennyman123abc">bendevnull</a>,
@@ -354,14 +354,14 @@ Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
                 <a target="_blank" href="https://github.com/larsenv">Larsenv</a>,
                 <a target="_blank" href="https://github.com/matthe815">Matthe815</a>
             </li>
-            <li>special thanks:
+            <li>Special thanks:
                 <a target="_blank" href="https://github.com/Genwald/MiiPort">Genwald</a> (tables from MiiPort),
                 <a target="_blank" href="https://github.com/jaames">jaames</a> (QR encryption)
             </li>
         </ul>
         <div class="left">For converting any Mii to studio in any* language, check out: <a target="_blank" href="https://github.com/ariankordi/mii-fusion-experiments/blob/main/MiiToStudio/MiiToStudio.fu">MiiToStudio.fu</a> by Arian
             <div class="small">* Any = C#, JS/TS, C++, Python, pure C</div>
-            <div class="small">** This uses a fork with additions that I hope to publicly release later: NX CoreData decoding, metadata, QR decryption, JS controller</div>
+            <div class="small">** This uses a fork with additions that I hope to publicly release later: NX CoreData decoding, metadata, QR decryption, JS controller. <a target="_blank" href="https://ariankordi.net">Contact me</a> if you want to encourage me to do this.</div>
         </div>
 
         <!-- Drag-and-drop overlay. -->

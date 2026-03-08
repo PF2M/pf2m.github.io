@@ -275,8 +275,8 @@ async function handleTextInput() {
     imageSource = ImageSource.CdnMii; // Image is coming from CDN.
     currentCdnMiiId = value;
 
-    setSourceState(textSourceId, 'loaded', '\u2714 Account ID');
-    setStatus('ok', 'Nintendo Account Mii ID loaded.');
+    setSourceState(textSourceId, 'loaded', '\u2714 cdn-mii ID');
+    setStatus('ok', 'Nintendo Account/cdn-mii ID loaded.');
 
     // Clear info since we don't have decoded data.
     clearCharacterInfo();

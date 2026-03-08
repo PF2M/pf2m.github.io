@@ -98,7 +98,7 @@ body {
     font-size: 11px;
     font-weight: bold;
     white-space: nowrap;
-    width: 6em;
+    width: 9em; /* tested with 10 chars of w, not surprised if has to be expanded */
 }
 .state-loaded .loaded-tag { color: #4a4; }
 .state-error .loaded-tag { color: #c44; }

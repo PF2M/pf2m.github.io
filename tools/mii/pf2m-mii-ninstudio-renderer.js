@@ -91,7 +91,7 @@ const buildImagePngUrl = (/** @type {string} */ data, /** @type {string} */ para
   ImagePngBase + data + '&' + params;
 
 const buildCdnMiiUrl = (/** @type {string} */ id, /** @type {string} */ params, format = 'png') =>
-  `${CdnMiiBase}${id}/image/68747470733a2f2f-7066326d2e636f6d.${format}?${params}`;
+  `${CdnMiiBase}${id}/image/0000000000000000-0000000000000000.${format}?${params}`;
 
 // // ---------------------------------------------------------
 // // DOM references

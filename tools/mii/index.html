@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Mii Renderer</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+
+        <meta name="language" content="en">
+        <meta name="title" content="Mii Renderer">
+        <meta name="robots" content="index, follow">
+        <meta name="subject" content="Mii">
+        <meta name="keywords" content="Nintendo, Wii, Mii, 3DS, Switch, Wii U, Check Mii Out Channel, Render, Mii Studio, WiiConnect24, Miiverse">
+        <meta name="description" content="This is a tool to render a Mii into image form. It works for many types of Miis! The output can be customized however you like.">
+        <meta name="classification" content="This is a tool to render a Mii into image form. It works for many types of Miis! The output can be customized however you like.">
+
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Mii Renderer">
+        <meta property="og:locale" content="en">
+        <meta property="og:site_name" content="Mii Renderer">
+        <meta property="og:description" content="This is a tool to render a Mii into image form. It works for many types of Miis! The output can be customized however you like.">
+    </head>
+    <body>
+        <h2>Mii Renderer</h2>
+        <div>
+            <p>
+                This is a tool to render a Mii into image form.
+                It works for many types of Miis - ones created on the Wii, a QR Code,
+                or even a Mii on WiiLink's Check Mii Out Channel!
+                The output can be customized however you like.
+                This works great to use as a profile picture!
+            </p>
+            <p>Also see <a href="https://mii-unsecure.ariankordi.net/" target="_blank">Mii Renderer (REAL)</a> by Arian - Open-source renderer with Wii U/Switch/Miitomo styles, conversion, 3D export, and more.</p>
+        </div>
+        <!-- Import section (MiiImportController) -->
+        <div class="import-section">
+
+            <!-- Source: Text (hex/base64/CMOC code/Account ID) -->
+            <div class="source-row state-idle" id="row-text" tabindex="0">
+                <input type="radio" name="active-source" id="radio-text" tabindex="-1">
+                <label class="source-label" for="radio-text">Text</label>
+                <div class="source-input">
+                    <input type="text" id="text-input"
+                        placeholder="Hex/Base64 data, CMOC code (5403-6703-1484), or Account ID"
+                        value="a6eec3a6cf628d5d">
+                </div>
+                <span class="loaded-tag" id="loaded-text" style="display: none;"></span>
+            </div>
+            <span class="small">Supports: Mii data Hex/Base64, <a target="_blank" href="https://miicontest.wiilink.ca">Check Mii Out Channel</a> code, cdn-mii ID</span>
+
+            <!-- Source: File -->
+            <div class="source-row state-idle" id="row-file" tabindex="0">
+                <input type="radio" name="active-source" id="radio-file" tabindex="-1">
+                <label class="source-label" for="radio-file">Mii File</label>
+                <div class="source-input">
+                    <input type="file" id="file-input" accept="*/*">
+                </div>
+                <span class="loaded-tag" id="loaded-file" style="display: none;"></span>
+            </div>
+            <span class="small">Supports byte sizes: Wii (74/76), 3DS/Wii U (92/96), Switch (48/68/88), Studio (46)</span>
+
+            <!-- Source: QR -->
+            <div class="source-row state-idle" id="row-qr" tabindex="0">
+                <input type="radio" name="active-source" id="radio-qr" tabindex="-1">
+                <label class="source-label" for="radio-qr">QR</label>
+                <div class="source-input">
+                    <div class="qr-controls">
+                        <button id="qr-start-btn" type="button">Scan</button>
+                        <button id="qr-stop-btn" type="button" style="display: none;">Stop</button>
+                        <select id="cam-list">
+                            <option value="environment" selected>Back Camera</option>
+                            <option value="user">Front Camera</option>
+                            <option class="device-camera" disabled>(Hit scan for more options.)</option>
+                        </select>
+                    </div>
+                    <div class="qr-controls">
+                        <label class="small" for="qr-file-input">or upload QR image:</label>
+                        <input type="file" id="qr-file-input" name="qr-file-input" accept="image/*">
+                    </div>
+                </div>
+                <span class="loaded-tag" id="loaded-qr" style="display: none;"></span>
+            </div>
+            <span class="small">You may also drag-and-drop a QR code image or Mii data file</span>
+
+            <!--
+            <span class="small">For instructions on how to get Mii IDs (only if grabbing from a Nintendo Account), please refer to <a href="https://pastebin.com/Xy7RqKMz" target="_blank">this Pastebin</a>.</span>-->
+            <details>
+                <summary>How to obtain a Mii ID from a Nintendo Account/Mii Studio</summary>
+                <pre class="not-pastebin">
+Getting your Mii ID - Only if you're importing from Nintendo Account/studio.mii.nintendo.com.
+
+Nintendo Account:
+1. Go to https://accounts.nintendo.com/ and log into an account with a Mii.
+2. Open any image of your Mii in a new tab.
+    - Right click (or long hold touch on mobile) the circle with your Mii in it.
+    - The Mii image is usually in User Info, or after opening the menu in the top right corner.
+
+3. The URL should look somewhat like this if you grab the right one:
+https://cdn-mii.accounts.nintendo.com/2.0.0/mii_images/a6eec3a6cf628d5d/c6e36c183112cd1be0eed159f5a49d0b.png?type=face ...
+
+4. **The value you want is between "/miis/" and "/image/" in the URL.**
+    - Mine would be "a6eec3a6cf628d5d".
+    - Nothing else in that URL matters.
+
+Mii Studio:
+1. Open the Mii Studio/Nintendo Account Mii editor.
+    - At https://accounts.nintendo.com/, hit "Edit" next to Profile.
+    - There will be an "Edit Mii" button under your Mii. Click and you'll enter the website.
+    - You should now see up to 6 characters with the text "Please select a Mii."
+2. Edit the Mii you want
+
+3. Copy the URL you are currently at. It should look like: https://studio.mii.nintendo.com/miis/a6eec3a6cf628d5d/edit?client_id=f2503ae55136cd57
+
+4. **The value you want is between "/miis/" and "/edit?client_id=..." in the URL.**
+    - Mine would be "a6eec3a6cf628d5d".
+    - Nothing else in that URL matters.
+
+Also refer to the original Pastebin: https://pastebin.com/Xy7RqKMz
+                </pre>
+            </details>
+
+            <!-- QR camera container -->
+            <div id="qr-container" style="display: none;">
+                <span class="small"><b>QR Code Scanner</b></span>
+                <video id="qr-video" muted playsinline></video>
+            </div>
+
+            <div id="import-status"></div>
+        </div>
+
+        <h4 class="title">Image</h4>
+        <div class="images" style="font-size: 0; line-height: 0;">
+            <img
+                class="image"
+                alt="Rendered image"
+                id="rendered-image"
+                style="display: none;"
+            >
+
+            <div id="loading-indicator" style="display: block;">
+                <!-- https://github.com/n3r4zzurr0/svg-spinners/blame/main/svg-smil/6-dots-rotate.svg -->
+                <svg style="width: 270px; height: 270px;" class="image" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <g><circle cx="12" cy="2.5" r="1.5" opacity=".14"/><circle cx="16.75" cy="3.77" r="1.5" opacity=".29"/><circle cx="20.23" cy="7.25" r="1.5" opacity=".43"/><circle cx="21.50" cy="12.00" r="1.5" opacity=".57"/><circle cx="20.23" cy="16.75" r="1.5" opacity=".71"/><circle cx="16.75" cy="20.23" r="1.5" opacity=".86"/><circle cx="12" cy="21.5" r="1.5"/><animateTransform attributeName="transform" type="rotate" calcMode="discrete" dur="0.9s" values="0 12 12;30 12 12;60 12 12;90 12 12;120 12 12;150 12 12;180 12 12;210 12 12;240 12 12;270 12 12;300 12 12;330 12 12;360 12 12" repeatCount="indefinite"/></g>
+                </svg>
+            </div>
+        </div>
+
+        <div id="information">
+            <h4 class="title">Mii Studio Code</h4>
+            <div class="small">Use with tools like <a target="_blank" href="https://github.com/HEYimHeroic/MiiStudioMiiLoader">Mii Studio Mii Loader</a></div>
+            <textarea id="mii-studio-code" readonly></textarea>
+            <h4 class="title">Mii Info</h4>
+            <table class="left">
+              <tr>
+                <td class="small">Nickname:</td>
+                <td class="small"><span id="info-nickname">?</span></td>
+              </tr>
+              <tr>
+                <td class="small">Creator:</td>
+                <td class="small"><span id="info-creator">?</span></td>
+              </tr>
+              <tr>
+                <td class="small">Birthday (MM/DD)</td>
+                <td class="small"><span id="info-birthday">??/??</span></td>
+              </tr>
+              <tr>
+                <td class="small">Favorite Color:</td>
+                <td class="small"><span id="info-favorite-color">?</span></td>
+              </tr>
+              <tr>
+                <td class="small">Height:</td>
+                <td class="small"><span id="info-height">?</span> / 127</td>
+              </tr>
+              <tr>
+                <td class="small">Build:</td>
+                <td class="small"><span id="info-build">?</span> / 127</td>
+              </tr>
+              <tr>
+                <td class="small">Gender:</td>
+                <td class="small"><span id="info-gender">?</span></td>
+              </tr>
+              <tr>
+                <td class="small">Sharing:</td>
+                <td class="small"><span id="info-localonly">?</span></td>
+              </tr>
+              <tr>
+                <td class="small">Copying:</td>
+                <td class="small"><span id="info-copyable">?</span></td>
+              </tr>
+            </table>
+        </div>
+
+        <hr>
+
+        <h3 class="title">Options</h3>
+        <!--
+        <label>
+            Format:
+            <select id="render-format" name="format">
+                <option value="png">PNG</option>
+                <option value="tga">TGA</option>
+            </select>
+        </label>
+        <div class="parameters">
+        -->
+        <ul class="parameters">
+            <li>
+                Type:
+                <select class="parameter" name="type">
+                    <option value="face">Face</option>
+                    <option value="face_only">Head</option>
+                    <option value="all_body">Body</option>
+                </select>
+            </li>
+            <li>
+                Expression:
+                <select class="parameter" name="expression">
+                    <option value="normal">Normal</option>
+                    <option value="smile">Smile</option>
+                    <option value="anger">Anger</option>
+                    <option value="sorrow">Sorrow</option>
+                    <option value="surprise">Surprise</option>
+                    <option value="blink">Blink</option>
+                    <option value="normal_open_mouth">Normal (open mouth)</option>
+                    <option value="smile_open_mouth">Smile (open mouth)</option>
+                    <option value="anger_open_mouth">Anger (open mouth)</option>
+                    <option value="surprise_open_mouth">Surprise (open mouth)</option>
+                    <option value="sorrow_open_mouth">Sorrow (open mouth)</option>
+                    <option value="blink_open_mouth">Blink (open mouth)</option>
+                    <option value="wink_left">Wink (left eye open)</option>
+                    <option value="wink_right">Wink (right eye open)</option>
+                    <option value="wink_left_open_mouth">Wink (left eye and mouth open)</option>
+                    <option value="wink_right_open_mouth">Wink (right eye and mouth open)</option>
+                    <option value="like_wink_left">Wink (left eye open, Miiverse-style)</option>
+                    <option value="like_wink_right">Wink (right eye open, Miiverse-style)</option>
+                    <option value="frustrated">Frustrated</option>
+                </select>
+            </li>
+            <li>
+                Width: <input name="width" type="range" min="0" max="4" step="1" list="widths-face" value="3" id="width-slider"> <span class="small" id="width-label">270px</span>
+                <datalist id="widths-face">
+                    <option value="0" data-width="96" label="96px"></option>
+                    <option value="1" data-width="128" label="128px"></option>
+                    <option value="2" data-width="140" label="140px"></option>
+                    <option value="3" data-width="270" label="270px"></option>
+                    <option value="4" data-width="512" label="512px"></option>
+                </datalist>
+
+                <datalist id="widths-body">
+                    <option value="0" data-width="96" label="96px"></option>
+                    <option value="1" data-width="270" label="270px"></option>
+                </datalist>
+
+                <input class="parameter" name="width" type="hidden" value="270" id="width-value">
+            </li>
+            <li>Background color: <input name="bgColor" type="color" value="#ffffff" id="bg-color"> <input class="parameter" name="bgColor" type="hidden" id="bg-color-value"></li>
+            <li>Background opacity: <input name="bgColorOpacity" type="range" min="0" max="255" value="0" id="bg-opacity"> <span class="small" id="bg-opacity-label">0</span></li>
+            <li>
+                Clothes color:
+                <select class="parameter" name="clothesColor">
+                    <option value="default">Default</option>
+                    <option value="red">Red</option>
+                    <option value="orange">Orange</option>
+                    <option value="yellow">Yellow</option>
+                    <option value="yellowgreen">Light green</option>
+                    <option value="green">Dark green</option>
+                    <option value="blue">Dark blue</option>
+                    <option value="skyblue">Light blue</option>
+                    <option value="pink">Pink</option>
+                    <option value="purple">Purple</option>
+                    <option value="brown">Brown</option>
+                    <option value="white">White</option>
+                    <option value="black">Black</option>
+                </select>
+            </li>
+            <li>Camera X rotation: <input class="parameter" name="cameraXRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></li>
+            <li>Camera Y rotation: <input class="parameter" name="cameraYRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></li>
+            <li>Camera Z rotation: <input class="parameter" name="cameraZRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></li>
+            <li>Character X rotation: <input class="parameter" name="characterXRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></li>
+            <li>Character Y rotation: <input class="parameter" name="characterYRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></li>
+            <li>Character Z rotation: <input class="parameter" name="characterZRotate" type="range" min="0" max="359" value="0"> <span class="small">0</span></li>
+
+            <li>
+                Light direction mode:
+                <select class="parameter" name="lightDirectionMode" id="light-direction-mode">
+                    <option value="none" selected>None</option>
+                    <!--
+                    These do not actually do anything on 2.0.0/Studio.
+                    Perhaps they did at some point?
+                    ffl_app.rpx has interesting code for calculating this
+                    <option value="zerox">Zero X</option>
+                    <option value="flipx">Flip X</option>
+                    <option value="camera">Camera</option>
+                    <option value="offset">Offset</option>
+                    -->
+                    <option value="set">Set</option>
+                </select>
+            </li>
+            <li>Light X direction: <input class="parameter light" name="lightXDirection" type="range" min="0" max="359" value="0" disabled> <span class="small">0</span></li>
+            <li>Light Y direction: <input class="parameter light" name="lightYDirection" type="range" min="0" max="359" value="0" disabled> <span class="small">0</span></li>
+            <li>Light Z direction: <input class="parameter light" name="lightZDirection" type="range" min="0" max="359" value="0" disabled> <span class="small">0</span></li>
+
+            <li>
+                Instance rotation mode:
+                <select class="parameter" name="instanceRotationMode">
+                    <option value="model">Model</option>
+                    <option value="camera">Camera</option>
+                    <option value="both">Both</option>
+                </select>
+            </li>
+            <li>
+                Instance count: <input class="parameter" name="instanceCount" type="range" min="1" max="16" list="instances" value="1"> <span class="small">1</span>
+                <datalist id="instances">
+                    <option value="1" label="1"></option>
+                    <option value="2" label="2"></option>
+                    <option value="3" label="3"></option>
+                    <option value="4" label="4"></option>
+                    <option value="5" label="5"></option>
+                    <option value="6" label="6"></option>
+                    <option value="7" label="7"></option>
+                    <option value="8" label="8"></option>
+                    <option value="9" label="9"></option>
+                    <option value="10" label="10"></option>
+                    <option value="11" label="11"></option>
+                    <option value="12" label="12"></option>
+                    <option value="13" label="13"></option>
+                    <option value="14" label="14"></option>
+                    <option value="15" label="15"></option>
+                    <option value="16" label="16"></option>
+                </datalist>
+            </li>
+            <li>
+                Split depth mode:
+                <select class="parameter" name="splitMode">
+                    <option value="">None</option>
+                    <option value="front">Front</option>
+                    <option value="back">Back</option>
+                    <option value="both">Both</option>
+                </select>
+            </li>
+
+        </ul>
+
+        <hr>
+
+        <h3>Credits</h3>
+        <ul class="left">
+            <li><a target="_blank" href="https://pf2m.com">PF2M</a> - original <a target="_blank" href="https://web.archive.org/web/20180221000405/https://pf2m.com/tools/mii/">2017 tool</a></li>
+            <li><a target="_blank" href="https://github.com/ariankordi">Arian</a> - 2026 rewrite from scratch</li>
+
+            <li>mii2studio authors:
+                <a target="_blank" href="https://github.com/bennyman123abc">bendevnull</a>,
+                <a target="_blank" href="https://github.com/HEYimHeroic">HEYimHeroic</a>,
+                <a target="_blank" href="https://github.com/larsenv">Larsenv</a>,
+                <a target="_blank" href="https://github.com/matthe815">Matthe815</a>
+            </li>
+            <li>special thanks:
+                <a target="_blank" href="https://github.com/Genwald/MiiPort">Genwald</a> (tables from MiiPort),
+                <a target="_blank" href="https://github.com/jaames">jaames</a> (QR encryption)
+            </li>
+        </ul>
+        <div class="left">For converting any Mii to studio in any* language, check out: <a target="_blank" href="https://github.com/ariankordi/mii-fusion-experiments/blob/main/MiiToStudio/MiiToStudio.fu">MiiToStudio.fu</a> by Arian
+            <div class="small">* Any = C#, JS/TS, C++, Python, pure C</div>
+            <div class="small">** This uses a fork with additions that I hope to publicly release later: NX CoreData decoding, metadata, QR decryption, JS controller</div>
+        </div>
+
+        <!-- Drag-and-drop overlay. -->
+        <div id="drop-overlay" style="display: none;">Drop Mii file or QR code image</div>
+
+<!--
+        <script type="importmap">{"imports": {
+            "./MiiImportController.js": "./MiiImportController.esm.js"
+        }}</script>
+
+        <script type="module" src="pf2m-mii-ninstudio-renderer.js"></script>
+-->
+        <script type="module" src="pf2m-mii-ninstudio-renderer.min.js"></script>
+    </body>
+</html>

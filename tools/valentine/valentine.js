@@ -1,13 +1,28 @@
-var canvas = document.getElementById("backdrop");
-var ctx = canvas.getContext("2d");
-var mCanvas = document.getElementById("mii");
-var mCtx = mCanvas.getContext("2d");
-var oCanvas = document.getElementById("output");
-var oCtx = oCanvas.getContext("2d");
-var settings = [];
-var edited = false;
-var paddingTop = 164;
-var paddingBottom = 244;
+// @ts-check
+
+import html2canvas from 'html2canvas';
+
+const canvas = document.getElementById("backdrop");
+const mCanvas = document.getElementById("mii");
+const oCanvas = document.getElementById("output");
+const ctx = canvas.getContext("2d");
+const mCtx = mCanvas.getContext("2d");
+// const oCtx = oCanvas.getContext("2d");
+const settings = {
+  id: null,
+  version: null,
+  expression: null,
+  color: null,
+  clothesColor: null
+};
+// let edited = false;
+let paddingTop = 164;
+let paddingBottom = 244;
+
+const valentine = document.getElementById("valentine");
+const message = document.getElementById("message");
+
+let colors;
 
 function updateSettings() {
   settings.id = document.getElementsByName("id")[0].value;
@@ -59,11 +74,11 @@ function getColors() {
 
 function drawCanvas(ctx) {
 
-  var bg = new Image();
+  const bg = new Image();
   bg.src = "background.png";
   bg.onload = function() {
-    var gradient = ctx.createLinearGradient(0, 0, 0, 512);
-    var colors = getColors();
+    const gradient = ctx.createLinearGradient(0, 0, 0, 512);
+    const colors = getColors();
     gradient.addColorStop(0, colors[0]);
     gradient.addColorStop(1, colors[1]);
     ctx.fillStyle = gradient;
@@ -86,13 +101,13 @@ function drawCanvas(ctx) {
 
 function drawMii() {
   mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
-  var mii = new Image();
+  const mii = new Image();
   mii.crossOrigin = "anonymous";
   mii.src = "https://cdn-mii.accounts.nintendo.com/" + encodeURIComponent(settings.version) + ".0.0/miis/" + encodeURIComponent(settings.id) + "/image/aaaaaaaaaaaaaaaa-aaaaaaaaaaaaaaaa.png?type=face&width=512&expression=" + encodeURIComponent(settings.expression) + "&characterYRotate=345&clothesColor=" + encodeURIComponent(settings.clothesColor);
   mii.onload = function() {
-    var dArr = [-1, -1, 0, -1, 1, -1, -1, 0, 1, 0, -1, 1, 0, 1, 1, 1];
-    var thickness = 4;
-    for (var i = 0; i < dArr.length; i += 2) {
+    const dArr = [-1, -1, 0, -1, 1, -1, -1, 0, 1, 0, -1, 1, 0, 1, 1, 1];
+    const thickness = 4;
+    for (let i = 0; i < dArr.length; i += 2) {
       mCtx.drawImage(mii, dArr[i] * thickness, dArr[i + 1] * thickness);
     }
     mCtx.globalCompositeOperation = "source-in";
@@ -109,9 +124,9 @@ function updateImage() {
   drawCanvas(ctx);
   document.getElementById("to").style.cssText = "color: " + getColors()[2];
   document.getElementById("from").style.cssText = "color: " + getColors()[2];
-  document.getElementById("message").style.cssText = "color: " + getColors()[2];
-  document.getElementById("message").style.paddingTop = paddingTop + "px";
-  document.getElementById("message").style.paddingBottom = paddingBottom + "px";
+  message.style.cssText = "color: " + getColors()[2];
+  message.style.paddingTop = paddingTop + "px";
+  message.style.paddingBottom = paddingBottom + "px";
 }
 document.getElementById("download").onclick = function() {
   /* if(!edited) {
@@ -119,55 +134,55 @@ document.getElementById("download").onclick = function() {
     return;
   } */
   window.scrollTo(0, 0);
-  document.getElementById("valentine").style.csstext = "background-image: " + canvas.toDataURL();
-  var exDee = ((512 - document.documentElement.clientWidth) * -0.5);
+  valentine.style.csstext = "background-image: " + canvas.toDataURL();
+  let exDee = ((512 - document.documentElement.clientWidth) * -0.5);
   if (exDee < 0) {
     exDee = 0;
   }
-  html2canvas(document.getElementById("valentine"), {
+  html2canvas(valentine, {
     canvas: document.getElementById("output"),
     width: 1024,
     height: 512,
-    x: (document.getElementById("valentine").scrollWidth / 2) - 512
+    x: (valentine.scrollWidth / 2) - 512
   }).then(function() {
-    var link = document.createElement("a");
+    const link = document.createElement("a");
     link.download = "valentine.png";
     link.href = oCanvas.toDataURL();
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    delete link;
+    //  delete link;
   });
 }
-for (var es = 0; es < document.getElementsByTagName("select").length; es++) {
+for (let es = 0; es < document.getElementsByTagName("select").length; es++) {
   document.getElementsByTagName("select")[es].onchange = updateImage;
 }
-for (var es = 0; es < document.querySelectorAll("input[type=checkbox]").length; es++) {
+for (let es = 0; es < document.querySelectorAll("input[type=checkbox]").length; es++) {
   document.querySelectorAll("input[type=checkbox]")[es].onchange = updateImage;
 }
-document.getElementById("message").onscroll = function() {
+message.onscroll = function() {
   /*
       if (this.selectionStart || this.selectionStart == '0') {
-          var startPos = this.selectionStart;
-          var endPos = this.selectionEnd;
+          const startPos = this.selectionStart;
+          const endPos = this.selectionEnd;
           this.value = this.value.substring(0, startPos) + "\n" + this.value.substring(endPos, this.value.length);
       } else {
           this.value += "\n";
       }*/
   this.scrollLeft = 0;
 }
-document.getElementById("message").onscroll = function() {
+message.onscroll = function() {
   this.scrollTop = 0;
   this.scrollLeft = 0;
 }
-document.getElementById("message").oninput = function() {
-  edited = true;
-  var lines = this.value.split(/\r*\n/);
-  for (var i = 0; i < lines.length; i++) {
+message.oninput = function() {
+  // edited = true;
+  let lines = this.value.split(/\r*\n/);
+  for (let i = 0; i < lines.length; i++) {
     if (ctx.measureText(lines[i]).width > 496) {
-      var string = "";
-      var lastSpacePos = -1;
-      for (var j = 0; j < lines[i].length - 1; j++) {
+      let string = "";
+      let lastSpacePos = -1;
+      for (let j = 0; j < lines[i].length - 1; j++) {
         string = string + lines[i].charAt(j);
         if (lines[i].charAt(j) == " ") {
           lastSpacePos = j;
